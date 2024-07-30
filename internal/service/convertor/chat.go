@@ -3,8 +3,8 @@ package convertor
 import (
 	"time"
 
-	"github.com/lookandhate/microservice-courese/chat/internal/service/model"
-	"github.com/lookandhate/microservice-courese/chat/pkg/chat_v1"
+	"github.com/lookandhate/course_chat/internal/service/model"
+	"github.com/lookandhate/course_chat/pkg/chat_v1"
 )
 
 // CreateChatFromProto converts data from protobuf to service layer model.

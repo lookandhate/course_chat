@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/lookandhate/microservice-courese/chat/internal/service/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 type ChatService interface {

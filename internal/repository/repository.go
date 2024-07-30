@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/lookandhate/microservice-courese/chat/internal/repository/model"
+	"github.com/lookandhate/course_chat/internal/repository/model"
 )
 
 type ChatRepository interface {

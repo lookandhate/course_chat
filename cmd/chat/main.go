@@ -2,45 +2,22 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"net"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/lookandhate/microservice-courese/chat/internal/config"
-	"github.com/lookandhate/microservice-courese/chat/internal/grpc/chat"
-	repository "github.com/lookandhate/microservice-courese/chat/internal/repository/chat"
-	"github.com/lookandhate/microservice-courese/chat/internal/service/chat"
-	"github.com/lookandhate/microservice-courese/chat/pkg/chat_v1"
-	"google.golang.org/grpc"
+	"github.com/lookandhate/course_chat/internal/app"
 )
 
 func main() {
-	cfg := config.MustLoad()
-	serverHost := fmt.Sprintf("localhost:%d", cfg.GPRC.Port)
 
 	ctx := context.Background()
 
-	connectionPool, err := pgxpool.New(ctx, cfg.DB.GetDSN())
+	a, err := app.NewApp(ctx)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v", err)
+		log.Fatalf("failed to init app: %s", err.Error())
 	}
 
-	log.Printf("Serving at %v", serverHost)
-
-	lis, err := net.Listen("tcp", serverHost)
+	err = a.Run()
 	if err != nil {
-		log.Fatalf("Failed to listen: %s", err)
-	}
-
-	repo := repository.NewPostgresRepository(connectionPool)
-	server := service.NewService(repo)
-
-	s := grpc.NewServer()
-	chatServer := chat.NewChatServer(server)
-	chat_v1.RegisterChatServer(s, chatServer)
-
-	if err = s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve GRPC server %s", err)
+		log.Fatalf("failed to run app: %s", err.Error())
 	}
 }

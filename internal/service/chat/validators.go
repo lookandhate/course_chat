@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/lookandhate/microservice-courese/chat/internal/service"
+	"github.com/lookandhate/course_chat/internal/service"
 )
 
 // checkChatExists - checks if chat exists and returns err if it does not exist.
