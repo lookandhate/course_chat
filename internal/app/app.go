@@ -7,7 +7,6 @@ import (
 
 	"github.com/lookandhate/course_chat/internal/closer"
 	"github.com/lookandhate/course_chat/pkg/chat_v1"
-	_ "github.com/lookandhate/course_chat/pkg/chat_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

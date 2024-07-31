@@ -56,7 +56,6 @@ func (m *manager) transaction(ctx context.Context, opts pgx.TxOptions, fn db.Han
 		if err != nil {
 			err = errors.Wrap(err, "tx commit failed")
 		}
-
 	}()
 	// Run handler.
 	if err = fn(ctx); err != nil {
