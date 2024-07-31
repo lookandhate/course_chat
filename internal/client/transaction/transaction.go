@@ -14,31 +14,30 @@ type manager struct {
 	db db.Transactor
 }
 
-// NewTransactionManager создает новый менеджер транзакций, который удовлетворяет интерфейсу db.TxManager
+// NewTransactionManager creates db.TxManager implementation.
 func NewTransactionManager(db db.Transactor) db.TxManager {
 	return &manager{
 		db: db,
 	}
 }
 
-// transaction основная функция, которая выполняет указанный пользователем обработчик в транзакции
+// transaction function that calls passed handler in a transaction.
 func (m *manager) transaction(ctx context.Context, opts pgx.TxOptions, fn db.Handler) (err error) {
-	// Если это вложенная транзакция, пропускаем инициацию новой транзакции и выполняем обработчик.
+	// If it is a wrapped transaction - just run the handler.
 	tx, ok := ctx.Value(pg.TxKey).(pgx.Tx)
 	if ok {
 		return fn(ctx)
 	}
 
-	// Стартуем новую транзакцию.
+	// Start new transaction.
 	tx, err = m.db.BeginTx(ctx, opts)
 	if err != nil {
 		return errors.Wrap(err, "can't begin transaction")
 	}
 
-	// Кладем транзакцию в контекст.
 	ctx = pg.MakeContextTx(ctx, tx)
 
-	// Настраиваем функцию отсрочки для отката или коммита транзакции.
+	// defer cleaning up in case of failing.
 	defer func() {
 		// восстанавливаемся после паники
 		if r := recover(); r != nil {
@@ -59,10 +58,7 @@ func (m *manager) transaction(ctx context.Context, opts pgx.TxOptions, fn db.Han
 		}
 
 	}()
-
-	// Выполните код внутри транзакции.
-	// Если функция терпит неудачу, возвращаем ошибку, и функция отсрочки выполняет откат
-	// или в противном случае транзакция коммитится.
+	// Run handler.
 	if err = fn(ctx); err != nil {
 		err = errors.Wrap(err, "failed executing code inside transaction")
 	}
