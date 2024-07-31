@@ -15,7 +15,7 @@ import (
 type key string
 
 const (
-	TxKey string = "tx"
+	TxKey key = "tx"
 )
 
 type pg struct {
@@ -104,5 +104,6 @@ func logQuery(ctx context.Context, q db.Query, args ...interface{}) {
 		ctx,
 		fmt.Sprintf("sql: %s", q.Name),
 		fmt.Sprintf("query: %s", q.QueryRaw),
+		fmt.Sprintf("args: %v", args),
 	)
 }
