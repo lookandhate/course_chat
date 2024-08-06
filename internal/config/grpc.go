@@ -7,6 +7,6 @@ type GRPCConfig struct {
 	Port int `yaml:"port" env-default:"50052" env:"GRPC_PORT"`
 }
 
-func (receiver GRPCConfig) Address() string {
-	return fmt.Sprintf(":%d", receiver.Port)
+func (c GRPCConfig) Address() string {
+	return fmt.Sprintf(":%d", c.Port)
 }
