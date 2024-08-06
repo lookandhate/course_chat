@@ -7,18 +7,18 @@ import (
 	"time"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/lookandhate/microservice-courese/chat/internal/repository/model"
+	"github.com/lookandhate/course_chat/internal/client/db"
+	"github.com/lookandhate/course_chat/internal/repository/model"
 )
 
 type PostgresRepository struct {
-	pgx *pgxpool.Pool
+	db db.Client
 }
 
 const (
 	chatTable       = "chats"
 	chatMemberTable = "chat_members"
-	messageTable    = "messages"
+	messageTable    = "message"
 
 	idColumn        = "id"
 	createdAtColumn = "created_at"
@@ -31,8 +31,8 @@ const (
 )
 
 // NewPostgresRepository creates PostgresRepository instance.
-func NewPostgresRepository(connectionPool *pgxpool.Pool) *PostgresRepository {
-	return &PostgresRepository{pgx: connectionPool}
+func NewPostgresRepository(db db.Client) *PostgresRepository {
+	return &PostgresRepository{db: db}
 }
 
 // CreateChat creates chat with chat members.
@@ -48,12 +48,19 @@ func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.Crea
 		return nil, err
 	}
 
+	query := db.Query{
+		Name:     "PostgresRepository.CreateChat",
+		QueryRaw: sql,
+	}
 	var chatModel model.ChatModel
-	err = r.pgx.QueryRow(ctx, sql, args...).Scan(&chatModel.ID, &chatModel.CreatedAt, &chatModel.UpdatedAt)
-	chatModel.UserIDs = request.UserIDs
+
+	err = r.db.DB().ScanOneContext(ctx, &chatModel, query, args...)
 	if err != nil {
 		return nil, err
 	}
+
+	chatModel.UserIDs = request.UserIDs
+
 	err = r.addUsersToChat(ctx, chatModel.ID, request.UserIDs)
 
 	return &chatModel, err
@@ -75,7 +82,12 @@ func (r *PostgresRepository) addUsersToChat(ctx context.Context, chatID int, use
 		return err
 	}
 
-	_, err = r.pgx.Exec(ctx, sql, args...)
+	query := db.Query{
+		Name:     "PostgresRepository.addUsersToChat",
+		QueryRaw: sql,
+	}
+
+	_, err = r.db.DB().ExecContext(ctx, query, args...)
 
 	return err
 }
@@ -94,15 +106,13 @@ func (r *PostgresRepository) CreateMessage(ctx context.Context, message *model.C
 		return nil, err
 	}
 
-	var createdMessage model.MessageModel
-	err = r.pgx.QueryRow(ctx, sql, args...).Scan(
-		&createdMessage.ID,
-		&createdMessage.Author,
-		&createdMessage.Content,
-		&createdMessage.ChatID,
-		&createdMessage.CreatedAt,
-		&createdMessage.UpdatedAt)
+	query := db.Query{
+		Name:     "PostgresRepository.CreateMessage",
+		QueryRaw: sql,
+	}
 
+	var createdMessage model.MessageModel
+	err = r.db.DB().ScanOneContext(ctx, &createdMessage, query, args...)
 	return &createdMessage, err
 }
 
@@ -116,7 +126,14 @@ func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return err
 	}
-	_, err = r.pgx.Exec(ctx, sql, args...)
+
+	query := db.Query{
+		Name:     "PostgresRepository.DeleteChat",
+		QueryRaw: sql,
+	}
+
+	_, err = r.db.DB().ExecContext(ctx, query, args...)
+
 	return err
 }
 
@@ -127,10 +144,16 @@ func (r *PostgresRepository) ChatExists(ctx context.Context, chatID int) (bool, 
 	builder := squirrel.Select(fmt.Sprintf("EXISTS(SELECT 1 FROM %s WHERE id = %s) AS chat_exists", chatTable, strconv.Itoa(chatID)))
 
 	sql, args, err := builder.ToSql()
-
 	if err != nil {
 		return false, err
 	}
-	err = r.pgx.QueryRow(ctx, sql, args...).Scan(&exists)
+
+	query := db.Query{
+		Name:     "PostgresRepository.ChatExists",
+		QueryRaw: sql,
+	}
+
+	err = r.db.DB().ScanOneContext(ctx, &exists, query, args...)
+
 	return exists, err
 }

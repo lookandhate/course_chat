@@ -3,13 +3,13 @@ package service
 import (
 	"context"
 
-	"github.com/lookandhate/microservice-courese/chat/internal/repository/convertor"
-	"github.com/lookandhate/microservice-courese/chat/internal/service"
-	"github.com/lookandhate/microservice-courese/chat/internal/service/model"
+	"github.com/lookandhate/course_chat/internal/repository/convertor"
+	"github.com/lookandhate/course_chat/internal/service"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
-// Create chat.
-func (s Service) Create(ctx context.Context, chat *model.CreateChatRequest) (int, error) {
+// CreateChat creates chat with given users.
+func (s Service) CreateChat(ctx context.Context, chat *model.CreateChatRequest) (int, error) {
 	createdChat, err := s.repo.CreateChat(ctx, convertor.CreateChatRequestToChatCreateRepo(chat))
 	if err != nil {
 		return 0, err

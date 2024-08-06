@@ -7,20 +7,20 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 service Chat {
-  rpc Create(CreateRequest) returns (CreateResponse);
-  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+  rpc DeleteChat(DeleteChatRequest) returns (google.protobuf.Empty);
   rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
 }
 
-message CreateRequest {
+message CreateChatRequest {
   repeated int64 user_ids = 1;
 }
 
-message CreateResponse {
+message CreateChatResponse {
   int64 id = 1;
 }
 
-message DeleteRequest {
+message DeleteChatRequest {
   int64 id = 1;
 }
 

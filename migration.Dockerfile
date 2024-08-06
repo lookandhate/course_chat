@@ -1,21 +1,19 @@
-FROM golang:1.22-alpine as builder
-ENV CGO_ENABLED=0
+FROM alpine:3.13
 
-WORKDIR /app
+RUN apk update && \
+    apk upgrade && \
+    apk add bash && \
+    rm -rf /var/cache/apk/*
 
-COPY . .
-RUN go mod download
+ADD https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 /bin/goose
+RUN pwd && ls
+RUN chmod +x /bin/goose
 
+WORKDIR /root
 
-WORKDIR /app
-RUN go build -o /bin/chat ./cmd/chat/main.go
+COPY migrations/*.sql ./migrations/
+COPY migration.sh .
+COPY .env .
 
-FROM alpine
-
-WORKDIR /bin
-
-COPY --from=builder /bin/chat /bin/chat
-COPY .env .env
-COPY ./config ./config
-
-CMD ["/bin/chat"]
+RUN chmod +x migration.sh
+ENTRYPOINT ["bash", "migration.sh"]

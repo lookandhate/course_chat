@@ -1,14 +1,16 @@
 package service
 
 import (
-	"github.com/lookandhate/microservice-courese/chat/internal/repository"
+	"github.com/lookandhate/course_chat/internal/client/db"
+	"github.com/lookandhate/course_chat/internal/repository"
 )
 
 type Service struct {
-	repo repository.ChatRepository
+	repo      repository.ChatRepository
+	txManager db.TxManager
 }
 
 // NewService creates Service with given repo.
-func NewService(repo repository.ChatRepository) *Service {
-	return &Service{repo: repo}
+func NewService(repo repository.ChatRepository, manager db.TxManager) *Service {
+	return &Service{repo: repo, txManager: manager}
 }

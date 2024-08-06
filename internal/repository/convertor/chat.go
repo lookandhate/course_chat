@@ -1,8 +1,8 @@
 package convertor
 
 import (
-	repoModel "github.com/lookandhate/microservice-courese/chat/internal/repository/model"
-	"github.com/lookandhate/microservice-courese/chat/internal/service/model"
+	repoModel "github.com/lookandhate/course_chat/internal/repository/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 // CreateChatRequestToChatCreateRepo converts from service model to repo model.
