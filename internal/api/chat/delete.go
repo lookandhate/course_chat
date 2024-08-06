@@ -7,8 +7,11 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *Server) Delete(ctx context.Context, request *chatAPI.DeleteRequest) (*emptypb.Empty, error) {
-	err := s.chatService.Delete(ctx, int(request.Id))
+func (s *Server) DeleteChat(ctx context.Context, request *chatAPI.DeleteChatRequest) (*emptypb.Empty, error) {
+	err := s.chatService.DeleteChat(ctx, int(request.Id))
+	if err != nil {
+		return nil, err
+	}
 
-	return &emptypb.Empty{}, err
+	return &emptypb.Empty{}, nil
 }

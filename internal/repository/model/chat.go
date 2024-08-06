@@ -24,12 +24,12 @@ type CreateMessageModel struct {
 
 // MessageModel - representation of message on repository layer.
 type MessageModel struct {
-	ID        int
-	Content   string
-	Author    int
-	ChatID    int
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
+	ID        int        `db:"id"`
+	Content   string     `db:"content"`
+	Author    int        `db:"author_id"`
+	ChatID    int        `db:"chat_id"`
+	CreatedAt *time.Time `db:"created_at"`
+	UpdatedAt *time.Time `db:"updated_at"`
 }
 
 // DeleteChatModel - representation of delete chat model.

@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-func (s Service) Delete(ctx context.Context, chatID int) error {
+func (s Service) DeleteChat(ctx context.Context, chatID int) error {
 	if err := s.validateID(ctx, chatID); err != nil {
 		return err
 	}

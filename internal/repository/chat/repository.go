@@ -18,7 +18,7 @@ type PostgresRepository struct {
 const (
 	chatTable       = "chats"
 	chatMemberTable = "chat_members"
-	messageTable    = "messages"
+	messageTable    = "message"
 
 	idColumn        = "id"
 	createdAtColumn = "created_at"
@@ -47,16 +47,18 @@ func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.Crea
 	if err != nil {
 		return nil, err
 	}
+
 	query := db.Query{
 		Name:     "PostgresRepository.CreateChat",
 		QueryRaw: sql,
 	}
-
 	var chatModel model.ChatModel
+
 	err = r.db.DB().ScanOneContext(ctx, &chatModel, query, args...)
 	if err != nil {
 		return nil, err
 	}
+
 	chatModel.UserIDs = request.UserIDs
 
 	err = r.addUsersToChat(ctx, chatModel.ID, request.UserIDs)
@@ -76,12 +78,13 @@ func (r *PostgresRepository) addUsersToChat(ctx context.Context, chatID int, use
 	}
 
 	sql, args, err := builder.ToSql()
+	if err != nil {
+		return err
+	}
+
 	query := db.Query{
 		Name:     "PostgresRepository.addUsersToChat",
 		QueryRaw: sql,
-	}
-	if err != nil {
-		return err
 	}
 
 	_, err = r.db.DB().ExecContext(ctx, query, args...)
@@ -102,6 +105,7 @@ func (r *PostgresRepository) CreateMessage(ctx context.Context, message *model.C
 	if err != nil {
 		return nil, err
 	}
+
 	query := db.Query{
 		Name:     "PostgresRepository.CreateMessage",
 		QueryRaw: sql,
@@ -124,9 +128,10 @@ func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 	}
 
 	query := db.Query{
-		Name:     "PostgresRepository.Delete",
+		Name:     "PostgresRepository.DeleteChat",
 		QueryRaw: sql,
 	}
+
 	_, err = r.db.DB().ExecContext(ctx, query, args...)
 
 	return err
@@ -142,11 +147,13 @@ func (r *PostgresRepository) ChatExists(ctx context.Context, chatID int) (bool, 
 	if err != nil {
 		return false, err
 	}
+
 	query := db.Query{
 		Name:     "PostgresRepository.ChatExists",
 		QueryRaw: sql,
 	}
 
 	err = r.db.DB().ScanOneContext(ctx, &exists, query, args...)
+
 	return exists, err
 }

@@ -8,7 +8,7 @@ import (
 )
 
 // CreateChatFromProto converts data from protobuf to service layer model.
-func CreateChatFromProto(chat *chat_v1.CreateRequest) *model.CreateChatRequest {
+func CreateChatFromProto(chat *chat_v1.CreateChatRequest) *model.CreateChatRequest {
 	return &model.CreateChatRequest{
 		UserIDs: chat.UserIds,
 	}
