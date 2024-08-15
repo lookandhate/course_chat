@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package chat_server_v1;
-option go_package = "github.com/lookandhate/microservice-course/chat/pkg/chat_v1;chat_v1";
+option go_package = "github.com/lookandhate/microservice-course/chat.go/pkg/chat_v1;chat_v1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";

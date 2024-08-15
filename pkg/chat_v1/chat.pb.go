@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.34.2
 // 	protoc        v5.27.2
-// source: chat.proto
+// source: chat.go.proto
 
 package chat_v1
 

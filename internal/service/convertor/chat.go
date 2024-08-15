@@ -1,25 +1,22 @@
 package convertor
 
 import (
-	"time"
-
+	repoModel "github.com/lookandhate/course_chat/internal/repository/model"
 	"github.com/lookandhate/course_chat/internal/service/model"
-	"github.com/lookandhate/course_chat/pkg/chat_v1"
 )
 
-// CreateChatFromProto converts data from protobuf to service layer model.
-func CreateChatFromProto(chat *chat_v1.CreateChatRequest) *model.CreateChatRequest {
-	return &model.CreateChatRequest{
-		UserIDs: chat.UserIds,
+// CreateChatRequestToChatCreateRepo converts from service model to repo model.
+func CreateChatRequestToChatCreateRepo(chat *model.CreateChatRequest) *repoModel.CreateChatModel {
+	return &repoModel.CreateChatModel{
+		UserIDs: chat.UserIDs,
 	}
 }
 
-// SendMessageFromProto converts message creation data from proto to service layer model.
-func SendMessageFromProto(message *chat_v1.SendMessageRequest) *model.SendMessageRequest {
-	return &model.SendMessageRequest{
-		ChatID:    int(message.ChatId),
-		AuthorID:  int(message.From),
-		Content:   message.Text,
-		Timestamp: time.Now(),
+// CreateMessageRequestToMessageCreateRepo converts from service chat.go creation to repo model.
+func CreateMessageRequestToMessageCreateRepo(message *model.SendMessageRequest) *repoModel.CreateMessageModel {
+	return &repoModel.CreateMessageModel{
+		ChatID:   message.ChatID,
+		Content:  message.Content,
+		AuthorID: message.AuthorID,
 	}
 }

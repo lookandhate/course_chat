@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/lookandhate/course_chat/internal/client/db"
 	"github.com/lookandhate/course_chat/internal/repository"
+	"github.com/lookandhate/course_platform_lib/pkg/db"
 )
 
 type Service struct {

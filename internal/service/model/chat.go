@@ -7,7 +7,7 @@ type CreateChatRequest struct {
 	UserIDs []int64
 }
 
-// Chat is service layer chat representation.
+// Chat is service layer chat.go representation.
 type Chat struct {
 	UserIDs []int
 	ChatID  int

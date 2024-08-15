@@ -8,7 +8,7 @@ RUN go mod download
 
 
 WORKDIR /app
-RUN go build -o /bin/chat ./cmd/chat/main.go
+RUN go build -o /bin/chat.go ./cmd/chat.go/main.go
 
 FROM alpine
 

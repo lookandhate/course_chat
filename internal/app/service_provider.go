@@ -2,13 +2,15 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	chatServer "github.com/lookandhate/course_chat/internal/api/chat"
-	"github.com/lookandhate/course_chat/internal/client/db"
-	"github.com/lookandhate/course_chat/internal/client/db/pg"
-	"github.com/lookandhate/course_chat/internal/client/transaction"
-	"github.com/lookandhate/course_chat/internal/closer"
+	"github.com/lookandhate/course_platform_lib/pkg/closer"
+	"github.com/lookandhate/course_platform_lib/pkg/db"
+	"github.com/lookandhate/course_platform_lib/pkg/db/pg"
+	"github.com/lookandhate/course_platform_lib/pkg/db/transaction"
+
 	"github.com/lookandhate/course_chat/internal/config"
 	"github.com/lookandhate/course_chat/internal/repository"
 	chatRepo "github.com/lookandhate/course_chat/internal/repository/chat"
@@ -73,6 +75,7 @@ func (s *serviceProvider) ChatServerImpl(ctx context.Context) *chatServer.Server
 func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	if s.dbClient == nil {
 		cl, err := pg.New(ctx, s.AppCfg().DB.GetDSN())
+		fmt.Printf("dsn: %s\n%v", s.AppCfg().DB.GetDSN(), cl)
 		if err != nil {
 			log.Fatalf("failed to create db client: %v", err)
 		}

@@ -3,7 +3,7 @@ package chat
 import (
 	"context"
 
-	"github.com/lookandhate/course_chat/internal/service/convertor"
+	"github.com/lookandhate/course_chat/internal/api/convertor"
 	chatAPI "github.com/lookandhate/course_chat/pkg/chat_v1"
 )
 
