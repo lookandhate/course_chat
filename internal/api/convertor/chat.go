@@ -1,8 +1,6 @@
 package convertor
 
 import (
-	"time"
-
 	"github.com/lookandhate/course_chat/internal/service/model"
 	"github.com/lookandhate/course_chat/pkg/chat_v1"
 )
@@ -20,6 +18,6 @@ func SendMessageFromProto(message *chat_v1.SendMessageRequest) *model.CreateMess
 		ChatID:    int(message.ChatId),
 		AuthorID:  int(message.From),
 		Content:   message.Text,
-		Timestamp: time.Now(),
+		Timestamp: message.Timestamp.AsTime(),
 	}
 }
