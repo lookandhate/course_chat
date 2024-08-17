@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 // CreateChatModel representation of create chat.go on repository layer.
 type CreateChatModel struct {
@@ -11,8 +14,8 @@ type CreateChatModel struct {
 type ChatModel struct {
 	ID        int
 	UserIDs   []int64
-	UpdatedAt *time.Time
-	CreatedAt *time.Time
+	UpdatedAt sql.NullTime
+	CreatedAt time.Time
 }
 
 // CreateMessageModel - representation of create message on repository layer.
@@ -24,12 +27,12 @@ type CreateMessageModel struct {
 
 // MessageModel - representation of message on repository layer.
 type MessageModel struct {
-	ID        int        `db:"id"`
-	Content   string     `db:"content"`
-	Author    int        `db:"author_id"`
-	ChatID    int        `db:"chat_id"`
-	CreatedAt *time.Time `db:"created_at"`
-	UpdatedAt *time.Time `db:"updated_at"`
+	ID        int          `db:"id"`
+	Content   string       `db:"content"`
+	Author    int          `db:"author_id"`
+	ChatID    int          `db:"chat_id"`
+	CreatedAt time.Time    `db:"created_at"`
+	UpdatedAt sql.NullTime `db:"updated_at"`
 }
 
 // DeleteChatModel - representation of delete chat.go model.

@@ -7,7 +7,7 @@ import (
 )
 
 type ChatService interface {
-	CreateChat(context.Context, *model.CreateChatRequest) (int, error)
+	CreateChat(context.Context, *model.CreateChat) (int, error)
 	DeleteChat(context.Context, int) error
-	SendMessage(context.Context, *model.SendMessageRequest) error
+	SendMessage(context.Context, *model.CreateMessage) error
 }

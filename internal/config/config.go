@@ -11,9 +11,10 @@ const DefaultConfig = "config/local.config.yml"
 
 // AppConfig config for application.
 type AppConfig struct {
-	Env  string         `yaml:"env" env-default:"local"`
-	GPRC GRPCConfig     `yaml:"gprc"`
-	DB   PostgresConfig `yaml:"db"`
+	Env   string         `yaml:"env" env-default:"local"`
+	GPRC  GRPCConfig     `yaml:"gprc"`
+	DB    PostgresConfig `yaml:"db"`
+	Redis RedisConfig    `yaml:"redis"`
 }
 
 // MustLoad creates AppConfig and loads it from yaml file.
