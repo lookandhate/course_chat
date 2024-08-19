@@ -35,7 +35,7 @@ func NewPostgresRepository(db db.Client) *PostgresRepository {
 	return &PostgresRepository{db: db}
 }
 
-// CreateChat creates chat.go with chat.go members.
+// CreateChat creates chat with chat members.
 func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.CreateChatModel) (*model.ChatModel, error) {
 	builder := squirrel.Insert(chatTable).
 		PlaceholderFormat(squirrel.Dollar).
@@ -66,7 +66,7 @@ func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.Crea
 	return &chatModel, err
 }
 
-// addUsersToChat creates chat.go members with given chatID and userIDSs.
+// addUsersToChat creates chat members with given chatID and userIDSs.
 func (r *PostgresRepository) addUsersToChat(ctx context.Context, chatID int, userIDs []int64) error {
 	builder := squirrel.
 		Insert(chatMemberTable).
@@ -119,7 +119,7 @@ func (r *PostgresRepository) CreateMessage(
 	return &createdMessage, err
 }
 
-// Delete deletes chat.go.
+// Delete deletes chat.
 func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 	builder := squirrel.Delete(chatTable).
 		PlaceholderFormat(squirrel.Dollar).
@@ -140,7 +140,7 @@ func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 	return err
 }
 
-// ChatExists checks if chat.go exists.
+// ChatExists checks if chat exists.
 func (r *PostgresRepository) ChatExists(ctx context.Context, chatID int) (bool, error) {
 	var exists bool
 	// using Prefix and suffix for EXIST query

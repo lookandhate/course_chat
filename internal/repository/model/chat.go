@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-// CreateChatModel representation of create chat.go on repository layer.
+// CreateChatModel representation of create chat on repository layer.
 type CreateChatModel struct {
 	UserIDs []int64
 }
 
-// ChatModel - representation of a chat.go on repository layer.
+// ChatModel - representation of a chat on repository layer.
 type ChatModel struct {
 	ID        int
 	UserIDs   []int64
@@ -36,7 +36,7 @@ type MessageModel struct {
 	UpdatedAt sql.NullTime `db:"updated_at"`
 }
 
-// DeleteChatModel - representation of delete chat.go model.
+// DeleteChatModel - representation of delete chat model.
 type DeleteChatModel struct {
 	ID int
 }

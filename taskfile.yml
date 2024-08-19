@@ -19,7 +19,7 @@ tasks:
   generate:
     - protoc --proto_path api/chat_v1 --go_out=./pkg/chat_v1/
       --go_opt=paths=source_relative --go-grpc_out=./pkg/chat_v1/
-      --go-grpc_opt=paths=source_relative api/chat_v1/chat.go.proto
+      --go-grpc_opt=paths=source_relative api/chat_v1/chat.proto
 
   migration-status:
     goose -dir {{.LOCAL_MIGRATION_DIR}} postgres {{.LOCAL_MIGRATION_DSN}} status -v
@@ -43,9 +43,9 @@ tasks:
 
   docker-build-and-push:
     cmds:
-      - docker build -t ${DOCKER_REGISTRY}chat.go-v0.0.1 .
+      - docker build -t ${DOCKER_REGISTRY}chat-v0.0.1 .
       - docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY}
-      - docker push ${DOCKER_REGISTRY}chat.go-v0.0.1
+      - docker push ${DOCKER_REGISTRY}chat-v0.0.1
 
   test:
     cmds:

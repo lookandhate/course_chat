@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// ChatModel is service layer chat.go representation.
+// ChatModel is service layer chat representation.
 type ChatModel struct {
 	UserIDs   []int64
 	ChatID    int
