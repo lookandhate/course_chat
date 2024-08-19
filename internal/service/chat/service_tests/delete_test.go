@@ -1,4 +1,4 @@
-package service_tests
+package service_test
 
 import (
 	"context"
@@ -59,9 +59,9 @@ func TestDelete(t *testing.T) {
 				mock.DeleteChatMock.Expect(ctx, int(deleteChatReq)).Return(nil)
 				return mock
 			},
-			txManagerMock: func(f func(context.Context) error, mc *minimock.Controller) db.TxManager {
+			txManagerMock: func(_ func(context.Context) error, mc *minimock.Controller) db.TxManager {
 				mock := mocks.NewTxManagerMock(mc)
-				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) (err error) {
+				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) error {
 					return f(ctx)
 				})
 				return mock
@@ -75,8 +75,7 @@ func TestDelete(t *testing.T) {
 			chatRepoMock := tt.chatRepoMock(mc)
 			chatCacheMock := tt.chatCacheMock(mc)
 			txManagerMock := tt.txManagerMock(func(ctx context.Context) error {
-				var txErr error
-				txErr = chatRepoMock.Delete(ctx, int64(deleteChatReq))
+				txErr := chatRepoMock.Delete(ctx, int64(deleteChatReq))
 				if txErr != nil {
 					return txErr
 				}

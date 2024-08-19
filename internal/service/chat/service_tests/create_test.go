@@ -1,4 +1,4 @@
-package service_tests
+package service_test
 
 import (
 	"context"
@@ -38,7 +38,7 @@ func TestCreateChat(t *testing.T) {
 		timeNow   = time.Now()
 	)
 
-	for i := 0; i < userCount; i++ {
+	for range userCount {
 		users = append(users, int64(gofakeit.Uint32()))
 	}
 	createChatReq := &model.CreateChat{
@@ -97,7 +97,7 @@ func TestCreateChat(t *testing.T) {
 			},
 			txManagerMock: func(_ func(context.Context) error, mc *minimock.Controller) db.TxManager {
 				mock := mocks.NewTxManagerMock(mc)
-				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) (err error) {
+				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) error {
 					return f(ctx)
 				})
 				return mock
@@ -125,7 +125,6 @@ func TestCreateChat(t *testing.T) {
 			chat, err := serviceTest.CreateChat(tt.args.ctx, tt.args.req)
 			require.Equal(t, tt.err, err)
 			require.Equal(t, tt.expectedResult, chat)
-
 		})
 	}
 }
@@ -212,9 +211,9 @@ func TestCreateMessage(t *testing.T) {
 				mock.CreateMessageMock.Expect(ctx, createMessageCacheReq).Return(nil)
 				return mock
 			},
-			txManagerMock: func(f func(context.Context) error, mc *minimock.Controller) db.TxManager {
+			txManagerMock: func(_ func(context.Context) error, mc *minimock.Controller) db.TxManager {
 				mock := mocks.NewTxManagerMock(mc)
-				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) (err error) {
+				mock.ReadCommittedMock.Optional().Set(func(ctx context.Context, f db.Handler) error {
 					return f(ctx)
 				})
 				return mock
@@ -243,5 +242,4 @@ func TestCreateMessage(t *testing.T) {
 			require.Equal(t, tt.err, err)
 		})
 	}
-
 }

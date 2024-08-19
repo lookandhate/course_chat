@@ -1,4 +1,4 @@
-package api_tests
+package api_test
 
 import (
 	"context"
@@ -27,7 +27,7 @@ func TestCreate(t *testing.T) {
 		chatID    = gofakeit.Int64()
 	)
 	// Generate list of user ids
-	for i := 0; i < userCount; i++ {
+	for range userCount {
 		users = append(users, gofakeit.Int64())
 	}
 

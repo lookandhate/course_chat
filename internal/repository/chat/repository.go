@@ -93,7 +93,10 @@ func (r *PostgresRepository) addUsersToChat(ctx context.Context, chatID int, use
 }
 
 // CreateMessage creates message.
-func (r *PostgresRepository) CreateMessage(ctx context.Context, message *model.CreateMessageModel) (*model.MessageModel, error) {
+func (r *PostgresRepository) CreateMessage(
+	ctx context.Context,
+	message *model.CreateMessageModel,
+) (*model.MessageModel, error) {
 	builder := squirrel.Insert(messageTable).
 		PlaceholderFormat(squirrel.Dollar).
 		Columns(authorIDColumn, contentColumn, chatIDColumn).
@@ -141,7 +144,13 @@ func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 func (r *PostgresRepository) ChatExists(ctx context.Context, chatID int) (bool, error) {
 	var exists bool
 	// using Prefix and suffix for EXIST query
-	builder := squirrel.Select(fmt.Sprintf("EXISTS(SELECT 1 FROM %s WHERE id = %s) AS chat_exists", chatTable, strconv.Itoa(chatID)))
+	builder := squirrel.Select(
+		fmt.Sprintf(
+			"EXISTS(SELECT 1 FROM %s WHERE id = %s) AS chat_exists",
+			chatTable,
+			strconv.Itoa(chatID),
+		),
+	)
 
 	sql, args, err := builder.ToSql()
 	if err != nil {

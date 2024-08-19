@@ -51,7 +51,11 @@ func (s Service) CreateMessage(ctx context.Context, message *model.CreateMessage
 		return err
 	}
 
-	err = s.cache.CreateMessage(ctx, convertor.ServiceMessageModelToCacheMessageModel(convertor.RepoMessageModelToServiceMessageModel(createdMessageRepo)))
+	err = s.cache.CreateMessage(ctx,
+		convertor.ServiceMessageModelToCacheMessageModel(
+			convertor.RepoMessageModelToServiceMessageModel(createdMessageRepo),
+		))
+
 	if err != nil {
 		log.Default().Printf("Error when saving message to cache: %v", err)
 	}
