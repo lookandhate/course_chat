@@ -46,3 +46,17 @@ tasks:
       - docker build -t ${DOCKER_REGISTRY}chat.go-v0.0.1 .
       - docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY}
       - docker push ${DOCKER_REGISTRY}chat.go-v0.0.1
+
+  test:
+    cmds:
+      - go clean -testcache
+      - go test ./... -covermode count -coverpkg=github.com/lookandhate/course_chat/internal/service/...,github.com/lookandhate/course_chat/internal/service/ -count 5
+  test-coverage:
+    cmds:
+      - go clean -testcache
+      - go test ./... -coverprofile=coverage.tmp.out -covermode count -coverpkg=github.com/lookandhate/course_chat/internal/service/...,github.com/lookandhate/course_chat/internal/api/... -count 5
+      - grep -v 'mocks\|config' coverage.tmp.out  > coverage.out
+      - rm coverage.tmp.out
+      - go tool cover -html=coverage.out;
+      - go tool cover -func=./coverage.out | grep "total";
+      - grep -sqFx "/coverage.out" .gitignore || echo "/coverage.out" >> .gitignore

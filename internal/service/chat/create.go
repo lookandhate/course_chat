@@ -35,8 +35,8 @@ func (s Service) CreateChat(ctx context.Context, chat *model.CreateChat) (int, e
 	return createdChat.ChatID, nil
 }
 
-// SendMessage sends message to the chat.go.
-func (s Service) SendMessage(ctx context.Context, message *model.CreateMessage) error {
+// CreateMessage creates message in chat.
+func (s Service) CreateMessage(ctx context.Context, message *model.CreateMessage) error {
 	if err := s.validateID(ctx, message.ChatID); err != nil {
 		return err
 	}

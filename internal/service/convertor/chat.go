@@ -18,9 +18,10 @@ func CreateChatRequestToChatCreateRepo(chat *serviceModel.CreateChat) *repoModel
 // CreateMessageRequestToMessageCreateRepo converts from service chat creation to repo model.
 func CreateMessageRequestToMessageCreateRepo(message *serviceModel.CreateMessage) *repoModel.CreateMessageModel {
 	return &repoModel.CreateMessageModel{
-		ChatID:   message.ChatID,
-		Content:  message.Content,
-		AuthorID: message.AuthorID,
+		ChatID:    message.ChatID,
+		Content:   message.Content,
+		AuthorID:  message.AuthorID,
+		Timestamp: message.Timestamp,
 	}
 }
 

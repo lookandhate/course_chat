@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	Chat_CreateChat_FullMethodName  = "/chat_server_v1.Chat/CreateChat"
 	Chat_DeleteChat_FullMethodName  = "/chat_server_v1.Chat/DeleteChat"
-	Chat_SendMessage_FullMethodName = "/chat_server_v1.Chat/SendMessage"
+	Chat_SendMessage_FullMethodName = "/chat_server_v1.Chat/CreateMessage"
 )
 
 // ChatClient is the client API for Chat service.
@@ -93,7 +93,7 @@ func (UnimplementedChatServer) DeleteChat(context.Context, *DeleteChatRequest) (
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteChat not implemented")
 }
 func (UnimplementedChatServer) SendMessage(context.Context, *SendMessageRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMessage not implemented")
 }
 func (UnimplementedChatServer) mustEmbedUnimplementedChatServer() {}
 
@@ -178,7 +178,7 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Chat_DeleteChat_Handler,
 		},
 		{
-			MethodName: "SendMessage",
+			MethodName: "CreateMessage",
 			Handler:    _Chat_SendMessage_Handler,
 		},
 	},

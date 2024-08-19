@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Server) SendMessage(ctx context.Context, request *chatAPI.SendMessageRequest) (*emptypb.Empty, error) {
-	err := s.chatService.SendMessage(ctx, convertor.SendMessageFromProto(request))
+	err := s.chatService.CreateMessage(ctx, convertor.SendMessageFromProto(request))
 	if err != nil {
 		return nil, err
 	}

@@ -20,9 +20,10 @@ type ChatModel struct {
 
 // CreateMessageModel - representation of create message on repository layer.
 type CreateMessageModel struct {
-	Content  string
-	AuthorID int
-	ChatID   int
+	Content   string
+	AuthorID  int
+	ChatID    int
+	Timestamp time.Time
 }
 
 // MessageModel - representation of message on repository layer.

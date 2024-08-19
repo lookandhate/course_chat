@@ -307,10 +307,10 @@ var file_chat_proto_depIdxs = []int32{
 	4, // 0: chat_server_v1.SendMessageRequest.timestamp:type_name -> google.protobuf.Timestamp
 	0, // 1: chat_server_v1.Chat.CreateChat:input_type -> chat_server_v1.CreateChatRequest
 	2, // 2: chat_server_v1.Chat.DeleteChat:input_type -> chat_server_v1.DeleteChatRequest
-	3, // 3: chat_server_v1.Chat.SendMessage:input_type -> chat_server_v1.SendMessageRequest
+	3, // 3: chat_server_v1.Chat.CreateMessage:input_type -> chat_server_v1.SendMessageRequest
 	1, // 4: chat_server_v1.Chat.CreateChat:output_type -> chat_server_v1.CreateChatResponse
 	5, // 5: chat_server_v1.Chat.DeleteChat:output_type -> google.protobuf.Empty
-	5, // 6: chat_server_v1.Chat.SendMessage:output_type -> google.protobuf.Empty
+	5, // 6: chat_server_v1.Chat.CreateMessage:output_type -> google.protobuf.Empty
 	4, // [4:7] is the sub-list for method output_type
 	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
