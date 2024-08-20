@@ -7,6 +7,7 @@ import (
 
 // ChatModel is service layer chat representation.
 type ChatModel struct {
+	ID        int
 	UserIDs   []int64
 	ChatID    int
 	CreatedAt time.Time

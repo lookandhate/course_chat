@@ -11,7 +11,7 @@ import (
 	mm_time "time"
 
 	"github.com/gojuno/minimock/v3"
-	"github.com/lookandhate/course_chat/internal/cache/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 // ChatCacheMock implements cache.ChatCache

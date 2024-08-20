@@ -3,12 +3,12 @@ package repository
 import (
 	"context"
 
-	"github.com/lookandhate/course_chat/internal/repository/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 type ChatRepository interface {
-	CreateChat(context.Context, *model.CreateChatModel) (*model.ChatModel, error)
-	CreateMessage(context.Context, *model.CreateMessageModel) (*model.MessageModel, error)
+	CreateChat(context.Context, *model.CreateChat) (*model.ChatModel, error)
+	CreateMessage(context.Context, *model.CreateMessage) (*model.MessageModel, error)
 	Delete(context.Context, int64) error
 	ChatExists(ctx context.Context, chatID int) (bool, error)
 }

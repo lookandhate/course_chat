@@ -3,7 +3,7 @@ package cache
 import (
 	"context"
 
-	"github.com/lookandhate/course_chat/internal/cache/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 type ChatCache interface {

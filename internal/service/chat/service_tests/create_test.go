@@ -10,10 +10,8 @@ import (
 	"github.com/gojuno/minimock/v3"
 	"github.com/lookandhate/course_chat/internal/cache"
 	cacheMocks "github.com/lookandhate/course_chat/internal/cache/mocks"
-	cacheModel "github.com/lookandhate/course_chat/internal/cache/model"
 	"github.com/lookandhate/course_chat/internal/repository"
 	repoMocks "github.com/lookandhate/course_chat/internal/repository/mocks"
-	repoModel "github.com/lookandhate/course_chat/internal/repository/model"
 	chatService "github.com/lookandhate/course_chat/internal/service/chat"
 	"github.com/lookandhate/course_chat/internal/service/model"
 	"github.com/lookandhate/course_platform_lib/pkg/db"
@@ -44,23 +42,14 @@ func TestCreateChat(t *testing.T) {
 	createChatReq := &model.CreateChat{
 		UserIDs: users,
 	}
-
-	createChatRepoReq := &repoModel.CreateChatModel{UserIDs: users}
-	createChatRepoRes := &repoModel.ChatModel{
-		ID:      int(chatID),
-		UserIDs: users,
+	createdChatRes := model.ChatModel{
+		UserIDs:   users,
+		ChatID:    int(chatID),
+		CreatedAt: timeNow,
 		UpdatedAt: sql.NullTime{
 			Valid: false,
 			Time:  time.Time{},
 		},
-		CreatedAt: timeNow,
-	}
-
-	createChatCacheReq := &cacheModel.ChatModel{
-		ID:          int(chatID),
-		UserIDs:     users,
-		CreatedAtNs: timeNow.UnixNano(),
-		UpdatedAtNs: 0,
 	}
 
 	type args struct {
@@ -87,12 +76,12 @@ func TestCreateChat(t *testing.T) {
 			},
 			chatRepoMock: func(mc *minimock.Controller) repository.ChatRepository {
 				mock := repoMocks.NewChatRepositoryMock(mc)
-				mock.CreateChatMock.Expect(ctx, createChatRepoReq).Return(createChatRepoRes, nil)
+				mock.CreateChatMock.Expect(ctx, createChatReq).Return(&createdChatRes, nil)
 				return mock
 			},
 			chatCacheMock: func(mc *minimock.Controller) cache.ChatCache {
 				mock := cacheMocks.NewChatCacheMock(mc)
-				mock.CreateChatMock.Expect(ctx, createChatCacheReq).Return(nil)
+				mock.CreateChatMock.Expect(ctx, &createdChatRes).Return(nil)
 				return mock
 			},
 			txManagerMock: func(_ func(context.Context) error, mc *minimock.Controller) db.TxManager {
@@ -113,7 +102,7 @@ func TestCreateChat(t *testing.T) {
 			chatCacheMock := tt.chatCacheMock(mc)
 			txManagerMock := tt.txManagerMock(func(ctx context.Context) error {
 				var txErr error
-				createdChat, txErr := chatRepoMock.CreateChat(ctx, createChatRepoReq)
+				createdChat, txErr := chatRepoMock.CreateChat(ctx, tt.args.req)
 				if txErr != nil {
 					return txErr
 				}
@@ -152,31 +141,12 @@ func TestCreateMessage(t *testing.T) {
 			Content:   message,
 			Timestamp: timestamp,
 		}
-
-		createMessageRepoReq = &repoModel.CreateMessageModel{
+		createMessageRes = &model.MessageModel{
+			ID:        int(messageID),
 			ChatID:    int(chatID),
 			AuthorID:  int(authorID),
 			Content:   message,
 			Timestamp: timestamp,
-		}
-		createMessageRepoRes = &repoModel.MessageModel{
-			ID:        int(messageID),
-			Content:   message,
-			Author:    int(authorID),
-			ChatID:    int(chatID),
-			CreatedAt: timestamp,
-			UpdatedAt: sql.NullTime{
-				Time:  time.Time{},
-				Valid: false,
-			},
-		}
-
-		createMessageCacheReq = &cacheModel.MessageModel{
-			ID:          int(messageID),
-			Content:     message,
-			Author:      int(authorID),
-			ChatID:      int(chatID),
-			TimestampNS: timestamp.UnixNano(),
 		}
 	)
 	type args struct {
@@ -203,12 +173,12 @@ func TestCreateMessage(t *testing.T) {
 			chatRepoMock: func(mc *minimock.Controller) repository.ChatRepository {
 				mock := repoMocks.NewChatRepositoryMock(mc)
 				mock.ChatExistsMock.Expect(ctx, int(chatID)).Return(true, nil)
-				mock.CreateMessageMock.Expect(ctx, createMessageRepoReq).Return(createMessageRepoRes, nil)
+				mock.CreateMessageMock.Expect(ctx, createMessageReq).Return(createMessageRes, nil)
 				return mock
 			},
 			chatCacheMock: func(mc *minimock.Controller) cache.ChatCache {
 				mock := cacheMocks.NewChatCacheMock(mc)
-				mock.CreateMessageMock.Expect(ctx, createMessageCacheReq).Return(nil)
+				mock.CreateMessageMock.Expect(ctx, createMessageRes).Return(nil)
 				return mock
 			},
 			txManagerMock: func(_ func(context.Context) error, mc *minimock.Controller) db.TxManager {
@@ -229,7 +199,7 @@ func TestCreateMessage(t *testing.T) {
 			chatCacheMock := tt.chatCacheMock(mc)
 			txManagerMock := tt.txManagerMock(func(ctx context.Context) error {
 				var txErr error
-				createdChat, txErr := chatRepoMock.CreateMessage(ctx, createMessageRepoReq)
+				createdChat, txErr := chatRepoMock.CreateMessage(ctx, createMessageReq)
 				if txErr != nil {
 					return txErr
 				}

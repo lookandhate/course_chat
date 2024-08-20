@@ -11,7 +11,7 @@ import (
 	mm_time "time"
 
 	"github.com/gojuno/minimock/v3"
-	"github.com/lookandhate/course_chat/internal/repository/model"
+	"github.com/lookandhate/course_chat/internal/service/model"
 )
 
 // ChatRepositoryMock implements repository.ChatRepository
@@ -25,14 +25,14 @@ type ChatRepositoryMock struct {
 	beforeChatExistsCounter uint64
 	ChatExistsMock          mChatRepositoryMockChatExists
 
-	funcCreateChat          func(ctx context.Context, cp1 *model.CreateChatModel) (cp2 *model.ChatModel, err error)
-	inspectFuncCreateChat   func(ctx context.Context, cp1 *model.CreateChatModel)
+	funcCreateChat          func(ctx context.Context, cp1 *model.CreateChat) (cp2 *model.ChatModel, err error)
+	inspectFuncCreateChat   func(ctx context.Context, cp1 *model.CreateChat)
 	afterCreateChatCounter  uint64
 	beforeCreateChatCounter uint64
 	CreateChatMock          mChatRepositoryMockCreateChat
 
-	funcCreateMessage          func(ctx context.Context, cp1 *model.CreateMessageModel) (mp1 *model.MessageModel, err error)
-	inspectFuncCreateMessage   func(ctx context.Context, cp1 *model.CreateMessageModel)
+	funcCreateMessage          func(ctx context.Context, cp1 *model.CreateMessage) (mp1 *model.MessageModel, err error)
+	inspectFuncCreateMessage   func(ctx context.Context, cp1 *model.CreateMessage)
 	afterCreateMessageCounter  uint64
 	beforeCreateMessageCounter uint64
 	CreateMessageMock          mChatRepositoryMockCreateMessage
@@ -414,13 +414,13 @@ type ChatRepositoryMockCreateChatExpectation struct {
 // ChatRepositoryMockCreateChatParams contains parameters of the ChatRepository.CreateChat
 type ChatRepositoryMockCreateChatParams struct {
 	ctx context.Context
-	cp1 *model.CreateChatModel
+	cp1 *model.CreateChat
 }
 
 // ChatRepositoryMockCreateChatParamPtrs contains pointers to parameters of the ChatRepository.CreateChat
 type ChatRepositoryMockCreateChatParamPtrs struct {
 	ctx *context.Context
-	cp1 **model.CreateChatModel
+	cp1 **model.CreateChat
 }
 
 // ChatRepositoryMockCreateChatResults contains results of the ChatRepository.CreateChat
@@ -440,7 +440,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) Optional() *mChatRepositoryMo
 }
 
 // Expect sets up expected params for ChatRepository.CreateChat
-func (mmCreateChat *mChatRepositoryMockCreateChat) Expect(ctx context.Context, cp1 *model.CreateChatModel) *mChatRepositoryMockCreateChat {
+func (mmCreateChat *mChatRepositoryMockCreateChat) Expect(ctx context.Context, cp1 *model.CreateChat) *mChatRepositoryMockCreateChat {
 	if mmCreateChat.mock.funcCreateChat != nil {
 		mmCreateChat.mock.t.Fatalf("ChatRepositoryMock.CreateChat mock is already set by Set")
 	}
@@ -486,7 +486,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) ExpectCtxParam1(ctx context.C
 }
 
 // ExpectCp1Param2 sets up expected param cp1 for ChatRepository.CreateChat
-func (mmCreateChat *mChatRepositoryMockCreateChat) ExpectCp1Param2(cp1 *model.CreateChatModel) *mChatRepositoryMockCreateChat {
+func (mmCreateChat *mChatRepositoryMockCreateChat) ExpectCp1Param2(cp1 *model.CreateChat) *mChatRepositoryMockCreateChat {
 	if mmCreateChat.mock.funcCreateChat != nil {
 		mmCreateChat.mock.t.Fatalf("ChatRepositoryMock.CreateChat mock is already set by Set")
 	}
@@ -508,7 +508,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) ExpectCp1Param2(cp1 *model.Cr
 }
 
 // Inspect accepts an inspector function that has same arguments as the ChatRepository.CreateChat
-func (mmCreateChat *mChatRepositoryMockCreateChat) Inspect(f func(ctx context.Context, cp1 *model.CreateChatModel)) *mChatRepositoryMockCreateChat {
+func (mmCreateChat *mChatRepositoryMockCreateChat) Inspect(f func(ctx context.Context, cp1 *model.CreateChat)) *mChatRepositoryMockCreateChat {
 	if mmCreateChat.mock.inspectFuncCreateChat != nil {
 		mmCreateChat.mock.t.Fatalf("Inspect function is already set for ChatRepositoryMock.CreateChat")
 	}
@@ -532,7 +532,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) Return(cp2 *model.ChatModel, 
 }
 
 // Set uses given function f to mock the ChatRepository.CreateChat method
-func (mmCreateChat *mChatRepositoryMockCreateChat) Set(f func(ctx context.Context, cp1 *model.CreateChatModel) (cp2 *model.ChatModel, err error)) *ChatRepositoryMock {
+func (mmCreateChat *mChatRepositoryMockCreateChat) Set(f func(ctx context.Context, cp1 *model.CreateChat) (cp2 *model.ChatModel, err error)) *ChatRepositoryMock {
 	if mmCreateChat.defaultExpectation != nil {
 		mmCreateChat.mock.t.Fatalf("Default expectation is already set for the ChatRepository.CreateChat method")
 	}
@@ -547,7 +547,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) Set(f func(ctx context.Contex
 
 // When sets expectation for the ChatRepository.CreateChat which will trigger the result defined by the following
 // Then helper
-func (mmCreateChat *mChatRepositoryMockCreateChat) When(ctx context.Context, cp1 *model.CreateChatModel) *ChatRepositoryMockCreateChatExpectation {
+func (mmCreateChat *mChatRepositoryMockCreateChat) When(ctx context.Context, cp1 *model.CreateChat) *ChatRepositoryMockCreateChatExpectation {
 	if mmCreateChat.mock.funcCreateChat != nil {
 		mmCreateChat.mock.t.Fatalf("ChatRepositoryMock.CreateChat mock is already set by Set")
 	}
@@ -587,7 +587,7 @@ func (mmCreateChat *mChatRepositoryMockCreateChat) invocationsDone() bool {
 }
 
 // CreateChat implements repository.ChatRepository
-func (mmCreateChat *ChatRepositoryMock) CreateChat(ctx context.Context, cp1 *model.CreateChatModel) (cp2 *model.ChatModel, err error) {
+func (mmCreateChat *ChatRepositoryMock) CreateChat(ctx context.Context, cp1 *model.CreateChat) (cp2 *model.ChatModel, err error) {
 	mm_atomic.AddUint64(&mmCreateChat.beforeCreateChatCounter, 1)
 	defer mm_atomic.AddUint64(&mmCreateChat.afterCreateChatCounter, 1)
 
@@ -735,13 +735,13 @@ type ChatRepositoryMockCreateMessageExpectation struct {
 // ChatRepositoryMockCreateMessageParams contains parameters of the ChatRepository.CreateMessage
 type ChatRepositoryMockCreateMessageParams struct {
 	ctx context.Context
-	cp1 *model.CreateMessageModel
+	cp1 *model.CreateMessage
 }
 
 // ChatRepositoryMockCreateMessageParamPtrs contains pointers to parameters of the ChatRepository.CreateMessage
 type ChatRepositoryMockCreateMessageParamPtrs struct {
 	ctx *context.Context
-	cp1 **model.CreateMessageModel
+	cp1 **model.CreateMessage
 }
 
 // ChatRepositoryMockCreateMessageResults contains results of the ChatRepository.CreateMessage
@@ -761,7 +761,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) Optional() *mChatReposi
 }
 
 // Expect sets up expected params for ChatRepository.CreateMessage
-func (mmCreateMessage *mChatRepositoryMockCreateMessage) Expect(ctx context.Context, cp1 *model.CreateMessageModel) *mChatRepositoryMockCreateMessage {
+func (mmCreateMessage *mChatRepositoryMockCreateMessage) Expect(ctx context.Context, cp1 *model.CreateMessage) *mChatRepositoryMockCreateMessage {
 	if mmCreateMessage.mock.funcCreateMessage != nil {
 		mmCreateMessage.mock.t.Fatalf("ChatRepositoryMock.CreateMessage mock is already set by Set")
 	}
@@ -807,7 +807,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) ExpectCtxParam1(ctx con
 }
 
 // ExpectCp1Param2 sets up expected param cp1 for ChatRepository.CreateMessage
-func (mmCreateMessage *mChatRepositoryMockCreateMessage) ExpectCp1Param2(cp1 *model.CreateMessageModel) *mChatRepositoryMockCreateMessage {
+func (mmCreateMessage *mChatRepositoryMockCreateMessage) ExpectCp1Param2(cp1 *model.CreateMessage) *mChatRepositoryMockCreateMessage {
 	if mmCreateMessage.mock.funcCreateMessage != nil {
 		mmCreateMessage.mock.t.Fatalf("ChatRepositoryMock.CreateMessage mock is already set by Set")
 	}
@@ -829,7 +829,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) ExpectCp1Param2(cp1 *mo
 }
 
 // Inspect accepts an inspector function that has same arguments as the ChatRepository.CreateMessage
-func (mmCreateMessage *mChatRepositoryMockCreateMessage) Inspect(f func(ctx context.Context, cp1 *model.CreateMessageModel)) *mChatRepositoryMockCreateMessage {
+func (mmCreateMessage *mChatRepositoryMockCreateMessage) Inspect(f func(ctx context.Context, cp1 *model.CreateMessage)) *mChatRepositoryMockCreateMessage {
 	if mmCreateMessage.mock.inspectFuncCreateMessage != nil {
 		mmCreateMessage.mock.t.Fatalf("Inspect function is already set for ChatRepositoryMock.CreateMessage")
 	}
@@ -853,7 +853,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) Return(mp1 *model.Messa
 }
 
 // Set uses given function f to mock the ChatRepository.CreateMessage method
-func (mmCreateMessage *mChatRepositoryMockCreateMessage) Set(f func(ctx context.Context, cp1 *model.CreateMessageModel) (mp1 *model.MessageModel, err error)) *ChatRepositoryMock {
+func (mmCreateMessage *mChatRepositoryMockCreateMessage) Set(f func(ctx context.Context, cp1 *model.CreateMessage) (mp1 *model.MessageModel, err error)) *ChatRepositoryMock {
 	if mmCreateMessage.defaultExpectation != nil {
 		mmCreateMessage.mock.t.Fatalf("Default expectation is already set for the ChatRepository.CreateMessage method")
 	}
@@ -868,7 +868,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) Set(f func(ctx context.
 
 // When sets expectation for the ChatRepository.CreateMessage which will trigger the result defined by the following
 // Then helper
-func (mmCreateMessage *mChatRepositoryMockCreateMessage) When(ctx context.Context, cp1 *model.CreateMessageModel) *ChatRepositoryMockCreateMessageExpectation {
+func (mmCreateMessage *mChatRepositoryMockCreateMessage) When(ctx context.Context, cp1 *model.CreateMessage) *ChatRepositoryMockCreateMessageExpectation {
 	if mmCreateMessage.mock.funcCreateMessage != nil {
 		mmCreateMessage.mock.t.Fatalf("ChatRepositoryMock.CreateMessage mock is already set by Set")
 	}
@@ -908,7 +908,7 @@ func (mmCreateMessage *mChatRepositoryMockCreateMessage) invocationsDone() bool 
 }
 
 // CreateMessage implements repository.ChatRepository
-func (mmCreateMessage *ChatRepositoryMock) CreateMessage(ctx context.Context, cp1 *model.CreateMessageModel) (mp1 *model.MessageModel, err error) {
+func (mmCreateMessage *ChatRepositoryMock) CreateMessage(ctx context.Context, cp1 *model.CreateMessage) (mp1 *model.MessageModel, err error) {
 	mm_atomic.AddUint64(&mmCreateMessage.beforeCreateMessageCounter, 1)
 	defer mm_atomic.AddUint64(&mmCreateMessage.afterCreateMessageCounter, 1)
 

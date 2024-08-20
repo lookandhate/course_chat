@@ -6,8 +6,9 @@ import (
 	"time"
 
 	redigo "github.com/gomodule/redigo/redis"
-	"github.com/lookandhate/course_chat/internal/cache/model"
 	"github.com/lookandhate/course_chat/internal/config"
+	"github.com/lookandhate/course_chat/internal/service/convertor"
+	serviceModel "github.com/lookandhate/course_chat/internal/service/model"
 	"github.com/lookandhate/course_platform_lib/pkg/cache/redis"
 )
 
@@ -21,8 +22,9 @@ func NewRedisCache(redisPool *redigo.Pool, redisCfg config.RedisConfig) *RedisCa
 	return &RedisCache{redisClient: client}
 }
 
-func (r RedisCache) CreateChat(ctx context.Context, chat *model.ChatModel) error {
-	err := r.redisClient.HashSet(ctx, r.chatKey(chat.ID), chat)
+func (r RedisCache) CreateChat(ctx context.Context, chat *serviceModel.ChatModel) error {
+	chatCache := convertor.ServiceChatModelToCacheChatModel(chat)
+	err := r.redisClient.HashSet(ctx, r.chatKey(chatCache.ID), chatCache)
 	if err != nil {
 		return err
 	}
@@ -30,8 +32,9 @@ func (r RedisCache) CreateChat(ctx context.Context, chat *model.ChatModel) error
 	return nil
 }
 
-func (r RedisCache) CreateMessage(ctx context.Context, message *model.MessageModel) error {
-	err := r.redisClient.HashSet(ctx, r.messageKey(message.ID), message)
+func (r RedisCache) CreateMessage(ctx context.Context, message *serviceModel.MessageModel) error {
+	messageCache := convertor.ServiceMessageModelToCacheMessageModel(message)
+	err := r.redisClient.HashSet(ctx, r.messageKey(messageCache.ID), messageCache)
 	if err != nil {
 		return err
 	}
