@@ -1,27 +1,37 @@
 package model
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
-// CreateChatRequest is service layer create chat representation.
-type CreateChatRequest struct {
+// ChatModel is service layer chat representation.
+type ChatModel struct {
+	ID        int
+	UserIDs   []int64
+	ChatID    int
+	CreatedAt time.Time
+	UpdatedAt sql.NullTime
+}
+
+// CreateChat is service layer create chat representation.
+type CreateChat struct {
 	UserIDs []int64
 }
 
-// Chat is service layer chat representation.
-type Chat struct {
-	UserIDs []int
-	ChatID  int
-}
-
-// SendMessageRequest is service layer message representation.
-type SendMessageRequest struct {
+// CreateMessage is service layer message creation representation.
+type CreateMessage struct {
 	ChatID    int
 	AuthorID  int
 	Content   string
 	Timestamp time.Time
 }
 
-// DeleteChatRequest is service layer message for chat deletion.
-type DeleteChatRequest struct {
-	ChatID int
+// MessageModel is service layer message representation.
+type MessageModel struct {
+	ID        int
+	ChatID    int
+	AuthorID  int
+	Content   string
+	Timestamp time.Time
 }

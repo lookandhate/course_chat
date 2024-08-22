@@ -7,8 +7,10 @@ import (
 	"time"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/lookandhate/course_chat/internal/client/db"
+	"github.com/lookandhate/course_chat/internal/repository/convertor"
 	"github.com/lookandhate/course_chat/internal/repository/model"
+	serviceModel "github.com/lookandhate/course_chat/internal/service/model"
+	"github.com/lookandhate/course_platform_lib/pkg/db"
 )
 
 type PostgresRepository struct {
@@ -36,7 +38,10 @@ func NewPostgresRepository(db db.Client) *PostgresRepository {
 }
 
 // CreateChat creates chat with chat members.
-func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.CreateChatModel) (*model.ChatModel, error) {
+func (r *PostgresRepository) CreateChat(
+	ctx context.Context, request *serviceModel.CreateChat,
+) (*serviceModel.ChatModel, error) {
+	chat := convertor.ServiceCreateChatToRepoCreateChat(request)
 	builder := squirrel.Insert(chatTable).
 		PlaceholderFormat(squirrel.Dollar).
 		Columns(createdAtColumn).
@@ -59,11 +64,11 @@ func (r *PostgresRepository) CreateChat(ctx context.Context, request *model.Crea
 		return nil, err
 	}
 
-	chatModel.UserIDs = request.UserIDs
+	chatModel.UserIDs = chat.UserIDs
 
 	err = r.addUsersToChat(ctx, chatModel.ID, request.UserIDs)
 
-	return &chatModel, err
+	return convertor.RepoChatModelToServiceChatModel(&chatModel), err
 }
 
 // addUsersToChat creates chat members with given chatID and userIDSs.
@@ -93,7 +98,10 @@ func (r *PostgresRepository) addUsersToChat(ctx context.Context, chatID int, use
 }
 
 // CreateMessage creates message.
-func (r *PostgresRepository) CreateMessage(ctx context.Context, message *model.CreateMessageModel) (*model.MessageModel, error) {
+func (r *PostgresRepository) CreateMessage(
+	ctx context.Context,
+	message *serviceModel.CreateMessage,
+) (*serviceModel.MessageModel, error) {
 	builder := squirrel.Insert(messageTable).
 		PlaceholderFormat(squirrel.Dollar).
 		Columns(authorIDColumn, contentColumn, chatIDColumn).
@@ -113,7 +121,7 @@ func (r *PostgresRepository) CreateMessage(ctx context.Context, message *model.C
 
 	var createdMessage model.MessageModel
 	err = r.db.DB().ScanOneContext(ctx, &createdMessage, query, args...)
-	return &createdMessage, err
+	return convertor.RepoMessageModelToServiceMessageModel(&createdMessage), err
 }
 
 // Delete deletes chat.
@@ -141,7 +149,13 @@ func (r *PostgresRepository) Delete(ctx context.Context, id int64) error {
 func (r *PostgresRepository) ChatExists(ctx context.Context, chatID int) (bool, error) {
 	var exists bool
 	// using Prefix and suffix for EXIST query
-	builder := squirrel.Select(fmt.Sprintf("EXISTS(SELECT 1 FROM %s WHERE id = %s) AS chat_exists", chatTable, strconv.Itoa(chatID)))
+	builder := squirrel.Select(
+		fmt.Sprintf(
+			"EXISTS(SELECT 1 FROM %s WHERE id = %s) AS chat_exists",
+			chatTable,
+			strconv.Itoa(chatID),
+		),
+	)
 
 	sql, args, err := builder.ToSql()
 	if err != nil {

@@ -3,12 +3,18 @@ package app
 import (
 	"context"
 	"log"
+	"time"
+
+	redigo "github.com/gomodule/redigo/redis"
 
 	chatServer "github.com/lookandhate/course_chat/internal/api/chat"
-	"github.com/lookandhate/course_chat/internal/client/db"
-	"github.com/lookandhate/course_chat/internal/client/db/pg"
-	"github.com/lookandhate/course_chat/internal/client/transaction"
-	"github.com/lookandhate/course_chat/internal/closer"
+	"github.com/lookandhate/course_chat/internal/cache"
+	"github.com/lookandhate/course_chat/internal/cache/chat"
+	"github.com/lookandhate/course_platform_lib/pkg/closer"
+	"github.com/lookandhate/course_platform_lib/pkg/db"
+	"github.com/lookandhate/course_platform_lib/pkg/db/pg"
+	"github.com/lookandhate/course_platform_lib/pkg/db/transaction"
+
 	"github.com/lookandhate/course_chat/internal/config"
 	"github.com/lookandhate/course_chat/internal/repository"
 	chatRepo "github.com/lookandhate/course_chat/internal/repository/chat"
@@ -23,7 +29,10 @@ type serviceProvider struct {
 	dbClient           db.Client
 	transactionManager db.TxManager
 
+	redisPool *redigo.Pool
+
 	chatRepository repository.ChatRepository
+	chatCache      cache.ChatCache
 
 	chatService    service.ChatService
 	chatServerImpl *chatServer.Server
@@ -55,7 +64,7 @@ func (s *serviceProvider) ChatRepository(ctx context.Context) repository.ChatRep
 // ChatService creates and returns service.ChatService.
 func (s *serviceProvider) ChatService(ctx context.Context) service.ChatService {
 	if s.chatService == nil {
-		s.chatService = chatService.NewService(s.ChatRepository(ctx), s.TxManager(ctx))
+		s.chatService = chatService.NewService(s.ChatRepository(ctx), s.TxManager(ctx), s.ChatCache())
 	}
 
 	return s.chatService
@@ -96,4 +105,25 @@ func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	}
 
 	return s.transactionManager
+}
+
+func (s *serviceProvider) RedisPool() *redigo.Pool {
+	if s.redisPool == nil {
+		s.redisPool = &redigo.Pool{
+			MaxIdle:     s.AppCfg().Redis.MaxIdle,
+			IdleTimeout: time.Duration(s.AppCfg().Redis.IdleTimeout),
+			Dial: func() (redigo.Conn, error) {
+				return redigo.Dial("tcp", s.AppCfg().Redis.Address())
+			},
+		}
+	}
+
+	return s.redisPool
+}
+func (s serviceProvider) ChatCache() cache.ChatCache {
+	if s.chatCache == nil {
+		s.chatCache = chat.NewRedisCache(s.RedisPool(), s.AppCfg().Redis)
+	}
+
+	return s.chatCache
 }

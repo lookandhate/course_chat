@@ -1,25 +1,32 @@
 package convertor
 
 import (
-	"time"
-
-	"github.com/lookandhate/course_chat/internal/service/model"
-	"github.com/lookandhate/course_chat/pkg/chat_v1"
+	cacheModel "github.com/lookandhate/course_chat/internal/cache/model"
+	serviceModel "github.com/lookandhate/course_chat/internal/service/model"
 )
 
-// CreateChatFromProto converts data from protobuf to service layer model.
-func CreateChatFromProto(chat *chat_v1.CreateChatRequest) *model.CreateChatRequest {
-	return &model.CreateChatRequest{
-		UserIDs: chat.UserIds,
+// ServiceChatModelToCacheChatModel converts from service layer to cache layer.
+func ServiceChatModelToCacheChatModel(chat *serviceModel.ChatModel) *cacheModel.ChatModel {
+	var updatedAtNS int64
+	if chat.UpdatedAt.Valid {
+		updatedAtNS = chat.UpdatedAt.Time.UnixNano()
+	} else {
+		updatedAtNS = 0
+	}
+	return &cacheModel.ChatModel{
+		ID:          chat.ChatID,
+		UserIDs:     chat.UserIDs,
+		CreatedAtNs: chat.CreatedAt.UnixNano(),
+		UpdatedAtNs: updatedAtNS,
 	}
 }
 
-// SendMessageFromProto converts message creation data from proto to service layer model.
-func SendMessageFromProto(message *chat_v1.SendMessageRequest) *model.SendMessageRequest {
-	return &model.SendMessageRequest{
-		ChatID:    int(message.ChatId),
-		AuthorID:  int(message.From),
-		Content:   message.Text,
-		Timestamp: time.Now(),
+func ServiceMessageModelToCacheMessageModel(message *serviceModel.MessageModel) *cacheModel.MessageModel {
+	return &cacheModel.MessageModel{
+		ID:          message.ID,
+		Content:     message.Content,
+		Author:      message.AuthorID,
+		ChatID:      message.ChatID,
+		TimestampNS: message.Timestamp.UnixNano(),
 	}
 }

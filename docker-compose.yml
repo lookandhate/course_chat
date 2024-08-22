@@ -32,8 +32,22 @@ services:
     networks:
       chat_db_network:
 
+  redis:
+    image: redis:7.4-alpine
+    env_file:
+      - .env
+    ports:
+      - "63791:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - redis_network
+
 volumes:
   chat_db:
+  redis:
 networks:
   chat_db_network:
+    driver: bridge
+  redis_network:
     driver: bridge
