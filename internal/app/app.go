@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/lookandhate/course_chat/internal/interceptor"
 	"github.com/lookandhate/course_chat/pkg/chat_v1"
 	"github.com/lookandhate/course_platform_lib/pkg/closer"
 	"google.golang.org/grpc"
@@ -57,7 +58,10 @@ func (a *App) initServiceProvider(_ context.Context) error {
 }
 
 func (a *App) initGRPCServer(ctx context.Context) error {
-	a.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
+	a.grpcServer = grpc.NewServer(
+		grpc.Creds(insecure.NewCredentials()),
+		grpc.UnaryInterceptor(interceptor.ValidateInterceptor),
+	)
 
 	chat_v1.RegisterChatServer(a.grpcServer, a.serviceProvider.ChatServerImpl(ctx))
 

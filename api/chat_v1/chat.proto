@@ -5,6 +5,7 @@ option go_package = "github.com/lookandhate/microservice-course/chat/pkg/chat_v1
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "validate/validate.proto";
 
 service Chat {
   rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
