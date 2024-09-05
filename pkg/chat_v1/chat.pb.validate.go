@@ -57,6 +57,22 @@ func (m *CreateChatRequest) validate(all bool) error {
 
 	var errors []error
 
+	for idx, item := range m.GetUserIds() {
+		_, _ = idx, item
+
+		if item < 0 {
+			err := CreateChatRequestValidationError{
+				field:  fmt.Sprintf("UserIds[%v]", idx),
+				reason: "value must be greater than or equal to 0",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CreateChatRequestMultiError(errors)
 	}
@@ -159,7 +175,16 @@ func (m *CreateChatResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() < 0 {
+		err := CreateChatResponseValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return CreateChatResponseMultiError(errors)
@@ -263,7 +288,16 @@ func (m *DeleteChatRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() < 0 {
+		err := DeleteChatRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return DeleteChatRequestMultiError(errors)
@@ -369,7 +403,16 @@ func (m *SendMessageRequest) validate(all bool) error {
 
 	// no validation rules for From
 
-	// no validation rules for Text
+	if utf8.RuneCountInString(m.GetText()) < 1 {
+		err := SendMessageRequestValidationError{
+			field:  "Text",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetTimestamp()).(type) {
@@ -400,7 +443,16 @@ func (m *SendMessageRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for ChatId
+	if m.GetChatId() < 0 {
+		err := SendMessageRequestValidationError{
+			field:  "ChatId",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return SendMessageRequestMultiError(errors)

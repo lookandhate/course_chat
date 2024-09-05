@@ -17,5 +17,5 @@ func ValidateInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryS
 		}
 	}
 
-	return handler(ctx, req), nil
+	return handler(ctx, req)
 }
