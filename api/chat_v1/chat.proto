@@ -6,11 +6,27 @@ option go_package = "github.com/lookandhate/microservice-course/chat/pkg/chat_v1
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
+import "google/api/annotations.proto";
+
 
 service Chat {
-  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
-  rpc DeleteChat(DeleteChatRequest) returns (google.protobuf.Empty);
-  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse) {
+    option (google.api.http) = {
+      post: "/v1/chat"
+      body: "*"
+    };
+  };
+  rpc DeleteChat(DeleteChatRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/chat"
+    };
+  };
+  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/message"
+      body: "*"
+    };
+  };
 }
 
 message CreateChatRequest {
