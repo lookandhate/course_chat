@@ -19,8 +19,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatClient interface {
+	// Creates new chat
 	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error)
+	// Deletes chat
 	DeleteChat(ctx context.Context, in *DeleteChatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Sends message to the chat
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -63,8 +66,11 @@ func (c *chatClient) SendMessage(ctx context.Context, in *SendMessageRequest, op
 // All implementations must embed UnimplementedChatServer
 // for forward compatibility
 type ChatServer interface {
+	// Creates new chat
 	CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error)
+	// Deletes chat
 	DeleteChat(context.Context, *DeleteChatRequest) (*emptypb.Empty, error)
+	// Sends message to the chat
 	SendMessage(context.Context, *SendMessageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedChatServer()
 }

@@ -151,3 +151,4 @@ go.work
 /coverage.out
 
 /vendor.protogen/
+/bin/
